@@ -1,23 +1,24 @@
-# 📊 Android Finance Tracker (Modern MAD Portfolio)
+# 📊 Android Finance Tracker (Premium Portfolio App)
 
-A production-ready personal finance management application built for Android. This project focuses on intensive local data manipulation, custom data visualization, reactive state management, and secure document exporting. It was developed to demonstrate mastery of modern software engineering practices and **MAD (Modern Android Development)** industry standards.
+A production-ready personal finance management application built for Android. This project showcases heavy local data manipulation, high-security data encryption, custom drawing visualization, reactive state processing, and streamlined data extraction. It serves as a comprehensive demonstration of **MAD (Modern Android Development)** best practices and strict software engineering industry standards.
 
-## 🚀 Key Features
-* **Reactive Financial Tracking:** Seamlessly logs income and expenses with real-time balance calculations powered by local storage.
-* **Custom Data Visualization:** An interactive Donut/Pie Chart drawn entirely from scratch using **Jetpack Compose Canvas 2D** geometry (zero third-party library dependencies).
-* **Robust CSV Exporting:** Converts raw local database transactions into structured spreadsheet documents (`.csv`) formatted for instant compatibility with Microsoft Excel and Google Sheets.
-* **Secure File Sharing:** Implements Android **FileProvider** architecture to securely stream and share generated CSV reports directly to external apps like WhatsApp, Gmail, or Google Drive.
-* **Seamless Dark Mode Support:** Features a fully adaptive Material 3 design system that automatically recalibrates layout surfaces and dynamically toggles the phone's status bar notification icons for optimal contrast.
+## 🚀 Key Features & Architectural Enhancements
+* **🛡️ Biometric Security Lock:** Secures sensitive financial records with a built-in device fingerprint/face unlock layer utilizing the Google `androidx.biometric` framework.
+* **📈 Smooth Animated Canvas Charts:** An interactive financial distribution Donut/Pie Chart engineered completely from scratch using **Jetpack Compose Canvas 2D** geometry (zero third-party dependencies) with dynamic, fluid entrance animations.
+* **🎯 Unified Export & Share Flow:** Merges complex storage logic into a single-click workflow. It instantly converts raw Room DB transactions into a clean semicolon-separated `.csv` report and streams it safely to external services (WhatsApp, Gmail, Google Drive) using **FileProvider Architecture**.
+* **💡 Reactive State Processing:** Synchronizes real-time balance calculations, spending distributions, and transactional history reactively to the layout surfaces.
+* **🌓 Automatic System-Wide Theme Adaptation:** Seamlessly responds to the user's phone dark/light mode preference, offering adaptive background dark shades and dynamic Status Bar notification icon color inversions for enhanced contrast.
 
-## 🛠️ Tech Stack & Architecture Standards
-* **Language:** Kotlin 2.x (Modern type-safe compilation)
-* **UI Framework:** Jetpack Compose (Declarative UI layout engineering)
-* **Design System:** Material Design 3
-* **Architecture:** MVVM (Model-View-ViewModel) + Repository Pattern
+## 🛠️ Tech Stack & Industrial Competencies
+* **Language:** Kotlin 2.x (Modern type-safe compile-time optimization)
+* **UI Engine:** Jetpack Compose (Declarative interface layout composition)
+* **Design Standards:** Material Design 3 Ecosystem
+* **Architecture:** MVVM (Model-View-ViewModel) + Repository Design Pattern
 * **Database Engine:** Room Database (Robust SQLite abstraction layer)
 * **Asynchronous Flow:** Kotlin Coroutines & StateFlow (Strict Unidirectional Data Flow / UDF)
 * **Annotation Processing:** KSP (Kotlin Symbol Processing)
-* **Dependency Management:** Gradle Version Catalog (`libs.versions.toml`)
+* **Dependency System:** Gradle Version Catalog (`libs.versions.toml`)
+* **Build Optimization:** Custom R8/ProGuard configuration squeezing production package footprint down to **5 MB**.
 
 ## 🏛️ Code Architecture Structure
 This project strictly enforces the **Separation of Concerns (SoC)** principle, isolating business logic from infrastructure requirements:
