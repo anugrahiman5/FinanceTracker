@@ -59,7 +59,7 @@ fun DashboardScreen(viewModel: DashboardViewModel) {
                 .padding(innerPadding)
                 .padding(horizontal = 16.dp)
         ) {
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(32.dp))
 
             // 1. Tampilan Grafik Visualisasi Canvas Custom
             Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
@@ -69,7 +69,7 @@ fun DashboardScreen(viewModel: DashboardViewModel) {
                 )
             }
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(12.dp))
 
             // 2. Ringkasan Saldo Keuangan Berbentuk Card Adaptif
             Card(
@@ -78,19 +78,19 @@ fun DashboardScreen(viewModel: DashboardViewModel) {
                     containerColor = MaterialTheme.colorScheme.surfaceVariant
                 )
             ) {
-                Column(modifier = Modifier.padding(16.dp)) {
+                Column(modifier = Modifier.padding(8.dp)) {
                     Text(
                         "Total Saldo: Rp ${balanceState.totalBalance}",
                         style = MaterialTheme.typography.titleLarge,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
-                    Spacer(modifier = Modifier.height(8.dp))
+                    Spacer(modifier = Modifier.height(4.dp))
                     Text("Pemasukan: Rp ${balanceState.totalIncome}", color = Color(0xFF2ECC71))
                     Text("Pengeluaran: Rp ${balanceState.totalExpense}", color = Color(0xFFE74C3C))
                 }
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(12.dp))
 
             // 3. Form Input Data Keuangan Lokal dengan Pewarnaan Terkontrol
             OutlinedTextField(
@@ -103,7 +103,7 @@ fun DashboardScreen(viewModel: DashboardViewModel) {
                     unfocusedTextColor = MaterialTheme.colorScheme.onBackground
                 )
             )
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(6.dp))
             OutlinedTextField(
                 value = amount,
                 onValueChange = { amount = it },
@@ -116,7 +116,7 @@ fun DashboardScreen(viewModel: DashboardViewModel) {
                 )
             )
 
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(8.dp))
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -147,52 +147,28 @@ fun DashboardScreen(viewModel: DashboardViewModel) {
                 ) { Text("Pengeluaran") }
             }
 
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(6.dp))
 
-            // 4. Tombol Fitur Ekspor File CSV
+            // 4. Tombol Fitur Ekspor & Share File CSV
             Button(
                 onClick = {
+                    // 1. Jalankan proses cetak/ekspor file terlebih dahulu
                     val file = exportToCSV(context, transactions)
-                    if (file != null) {
-                        Toast.makeText(context, "Laporan berhasil diekspor!", Toast.LENGTH_LONG)
-                            .show()
-                    } else {
-                        Toast.makeText(
-                            context,
-                            "Gagal mengekspor laporan (Data masih kosong)",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                },
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text("Ekspor Laporan ke CSV")
-            }
 
-            Spacer(modifier = Modifier.height(8.dp))
-
-            // 5. Tombol Fitur Share File CSV
-            Button(
-                onClick = {
-                    // Mengambil referensi file yang ada di memori internal
-                    val file = File(context.filesDir, "Laporan_Keuangan_Tracker.csv")
-                    if (file.exists()) {
-                        shareCSVFile(context, file) // Panggil fungsi share jika file ada
+                    if (file != null && file.exists()) {
+                        // 2. Jika cetak sukses, langsung buka menu bagikan otomatis!
+                        shareCSVFile(context, file)
                     } else {
-                        Toast.makeText(
-                            context,
-                            "Silakan klik 'Ekspor Laporan' terlebih dahulu!",
-                            Toast.LENGTH_LONG
-                        ).show()
+                        Toast.makeText(context, "Gagal memproses laporan (Data masih kosong)", Toast.LENGTH_SHORT).show()
                     }
                 },
                 modifier = Modifier.fillMaxWidth(),
-                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary)
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
             ) {
-                Text("Bagikan Laporan CSV")
+                Text("Ekspor & Bagikan Laporan (CSV)", color = Color.White)
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(12.dp))
 
             Text(
                 "Riwayat Transaksi",
@@ -200,7 +176,7 @@ fun DashboardScreen(viewModel: DashboardViewModel) {
                 color = MaterialTheme.colorScheme.onBackground
             )
 
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(4.dp))
 
             // 5. Daftar Aliran Data Riwayat Finansial (LazyColumn)
             LazyColumn(modifier = Modifier.weight(1f)) {

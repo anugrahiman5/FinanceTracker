@@ -1,8 +1,11 @@
 package com.anugrahiman.financetracker
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.appcompat.app.AppCompatActivity
+import androidx.biometric.BiometricPrompt
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
@@ -12,6 +15,7 @@ import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalView
+import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -19,16 +23,20 @@ import com.anugrahiman.financetracker.data.local.ExpenseDatabase
 import com.anugrahiman.financetracker.data.repository.TransactionRepository
 import com.anugrahiman.financetracker.ui.dashboard.DashboardScreen
 import com.anugrahiman.financetracker.ui.dashboard.DashboardViewModel
+import java.util.concurrent.Executor
 
-class MainActivity : ComponentActivity() {
+class MainActivity : AppCompatActivity() {
+
+    private lateinit var executor: Executor
+    private lateinit var biometricPrompt: BiometricPrompt
+    private lateinit var promptInfo: BiometricPrompt.PromptInfo
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // 1. Inisialisasi Database dan Repository Lokal
         val database = ExpenseDatabase.getDatabase(this)
         val repository = TransactionRepository(database.transactionDao())
 
-        // 2. Membuat ViewModel menggunakan Factory Pattern yang aman
         val viewModelFactory = object : ViewModelProvider.Factory {
             @Suppress("UNCHECKED_CAST")
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
@@ -41,12 +49,42 @@ class MainActivity : ComponentActivity() {
 
         val viewModel = ViewModelProvider(this, viewModelFactory)[DashboardViewModel::class.java]
 
-        // 3. Menampilkan Konten Utama dengan Pembungkus Tema Otomatis
-        setContent {
-            CustomFinanceTheme {
-                DashboardScreen(viewModel = viewModel)
-            }
-        }
+        // Setup sistem Biometrik Keamanan
+        executor = ContextCompat.getMainExecutor(this)
+        biometricPrompt = BiometricPrompt(this, executor,
+            object : BiometricPrompt.AuthenticationCallback() {
+                override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
+                    super.onAuthenticationError(errorCode, errString)
+                    // Jika pengguna membatalkan atau sensor error, tutup aplikasi demi keamanan data
+                    Toast.makeText(applicationContext, "Autentikasi diperlukan untuk membuka data keuangan!", Toast.LENGTH_LONG).show()
+                    finish()
+                }
+
+                override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
+                    super.onAuthenticationSucceeded(result)
+                    // JIKA SUKSES: Baru tampilkan halaman utama finansial
+                    setContent {
+                        CustomFinanceTheme {
+                            DashboardScreen(viewModel = viewModel)
+                        }
+                    }
+                }
+
+                override fun onAuthenticationFailed() {
+                    super.onAuthenticationFailed()
+                    Toast.makeText(applicationContext, "Sidik jari tidak cocok!", Toast.LENGTH_SHORT).show()
+                }
+            })
+
+        // Pengaturan teks informasi pada lembar dialog sidik jari
+        promptInfo = BiometricPrompt.PromptInfo.Builder()
+            .setTitle("Kunci Keamanan Finansial")
+            .setSubtitle("Pindai sidik jari Anda untuk mengakses aplikasi")
+            .setNegativeButtonText("Keluar")
+            .build()
+
+        // Pemicu otomatis dialog kunci muncul begitu aplikasi pertama kali dibuka
+        biometricPrompt.authenticate(promptInfo)
     }
 }
 

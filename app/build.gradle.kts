@@ -24,7 +24,18 @@ android {
         release {
             optimization {
                 enable = false
+
             }
+        }
+        getByName("debug") {
+            optimization {
+                enable = true
+                isShrinkResources = true
+            }
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
         }
     }
     compileOptions {
@@ -52,4 +63,5 @@ dependencies {
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
     ksp(libs.androidx.room.compiler)
+    implementation(libs.androidx.biometric)
 }
